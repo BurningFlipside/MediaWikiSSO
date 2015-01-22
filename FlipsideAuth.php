@@ -34,13 +34,15 @@ function flip_authonUserLoadFromSession($user, &$result)
                 $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->mail[0]));
                 if($s === false)
                 {
-                    $user = new User();
-                    $user->loadDefaults($userName);
-                    $user->mEmail = $flip_user->mail[0];
-                    $user->mRealName = get_single_value_from_array($flip_user->givenName)." ".get_single_value_from_array($flip_user->sn);
-                    $user->EmailAuthenticated = wfTimestamp();
-                    $user->mTouched           = wfTimestamp();
-                    $res = $user->addToDatabase();
+                    $user = User::newFromName($userName);
+                    if(!$user->isLoggedIn())
+                    {
+                        $user->mEmail = $flip_user->mail[0];
+                        $user->mRealName = get_single_value_from_array($flip_user->givenName)." ".get_single_value_from_array($flip_user->sn);
+                        $user->EmailAuthenticated = wfTimestamp();
+                        $user->mTouched           = wfTimestamp();
+                        $res = $user->addToDatabase();
+                    }
                 }
                 else
                 {
