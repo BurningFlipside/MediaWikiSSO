@@ -28,10 +28,10 @@ function flip_authonUserLoadFromSession($user, &$result)
             $flip_user = $session['flipside_user'];
             $dbr =& wfGetDB( DB_SLAVE );
             $userName = ucwords($flip_user->uid[0]);
-            $s = $dbr->selectRow('user', array('user_id'), array('user_name' => $userName));
+            $s = $dbr->selectRow('user', array('user_id'), array('user_name' => $userName), __METHOD__);
             if($s === false)
             {
-                $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->mail[0]));
+                $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->mail[0]), __METHOD__);
                 if($s === false)
                 {
                     $user = User::newFromName($userName);
@@ -47,7 +47,8 @@ function flip_authonUserLoadFromSession($user, &$result)
                 else
                 {
                     $user->mId = $s->user_id;
-                    $dbr->update('user', array('user_name' => $userName), array('user_id' => $s->user_id));
+                    $dbw =& wfGetDB( DB_MASTER );
+                    $dbw->update('user', array('user_name' => $userName), array('user_id' => $s->user_id), __METHOD__);
                 }
             }
             else
