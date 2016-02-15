@@ -22,23 +22,24 @@ function flip_authonUserLoadFromSession($user, &$result)
     {
         $new_id = $_COOKIE['PHPSESSID'];
         require_once('/var/www/common/class.FlipSession.php');
-        $session = FlipSession::get_session_by_id($new_id);
-        if($session != FALSE && isset($session['flipside_user']))
+        $session = FlipSession::getSessionById($new_id);
+        if($session != FALSE && isset($session['AuthMethod']) && isset($session['AuthData']))
         {
-            $flip_user = $session['flipside_user'];
+            $auth = \AuthProvider::getInstance();
+            $flip_user = $auth->getUser($session['AuthData'], $session['AuthMethod']);
             $dbr =& wfGetDB( DB_SLAVE );
-            $userName = ucwords($flip_user->uid[0]);
+            $userName = ucwords($flip_user->getUid());
             $s = $dbr->selectRow('user', array('user_id'), array('user_name' => $userName), __METHOD__);
             if($s === false)
             {
-                $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->mail[0]), __METHOD__);
+                $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->getEmail()), __METHOD__);
                 if($s === false)
                 {
                     $user = User::newFromName($userName);
                     if(!$user->isLoggedIn())
                     {
-                        $user->mEmail = $flip_user->mail[0];
-                        $user->mRealName = get_single_value_from_array($flip_user->givenName)." ".get_single_value_from_array($flip_user->sn);
+                        $user->mEmail = $flip_user->getEmail();
+                        $user->mRealName = $flip_user->getGivenName()." ".$flip_user->getLastName();
                         $user->EmailAuthenticated = wfTimestamp();
                         $user->mTouched           = wfTimestamp();
                         $res = $user->addToDatabase();
