@@ -82,6 +82,11 @@ function flip_authonUserLoginForm(&$template)
     header('Location: https://profiles.burningflipside.com/login.php?return='.$return);
 }
 
+function flip_createUserForm(&$template)
+{
+    header('Location: https://profiles.burningflipside.com/register.php');
+}
+
 function flip_authonUserLogoutComplete(&$user, &$inject_html, $old_name)
 {
     header('Location: https://profiles.burningflipside.com/logout.php');
@@ -99,6 +104,7 @@ $wgExtensionCredits['validextensionclass'][] = array(
 
 $wgHooks['UserLoadFromSession'][] = 'flip_authonUserLoadFromSession';
 $wgHooks['UserLoginForm'][] = 'flip_authonUserLoginForm';
+$wgHooks['UserCreateForm'][] = 'flip_createUserForm';
 $wgHooks['UserLogoutComplete'][] = 'flip_authonUserLogoutComplete';
 
 ?>
