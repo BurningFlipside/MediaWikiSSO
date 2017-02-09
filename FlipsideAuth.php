@@ -28,7 +28,7 @@ function flip_authonUserLoadFromSession($user, &$result)
             $auth = \AuthProvider::getInstance();
             $flip_user = $auth->getUser($session['AuthData'], $session['AuthMethod']);
             $dbr =& wfGetDB( DB_SLAVE );
-            $userName = ucwords($flip_user->getUid());
+            $userName = ucwords($flip_user->uid);
             $s = $dbr->selectRow('user', array('user_id'), array('user_name' => $userName), __METHOD__);
             if($s === false)
             {
@@ -38,8 +38,8 @@ function flip_authonUserLoadFromSession($user, &$result)
                     $user = User::newFromName($userName);
                     if(!$user->isLoggedIn())
                     {
-                        $user->mEmail = $flip_user->getEmail();
-                        $user->mRealName = $flip_user->getGivenName()." ".$flip_user->getLastName();
+                        $user->mEmail = $flip_user->mail;
+                        $user->mRealName = $flip_user->givenName." ".$flip_user->sn;
                         $user->EmailAuthenticated = wfTimestamp();
                         $user->mTouched           = wfTimestamp();
                         $res = $user->addToDatabase();
