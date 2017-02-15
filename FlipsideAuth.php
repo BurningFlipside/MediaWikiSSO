@@ -32,7 +32,7 @@ function flip_authonUserLoadFromSession($user, &$result)
             $s = $dbr->selectRow('user', array('user_id'), array('user_name' => $userName), __METHOD__);
             if($s === false)
             {
-                $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->getEmail()), __METHOD__);
+                $s = $dbr->selectRow('user', array('user_id'), array('user_email' => $flip_user->mail), __METHOD__);
                 if($s === false)
                 {
                     $user = User::newFromName($userName);
