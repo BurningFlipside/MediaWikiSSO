@@ -79,17 +79,17 @@ function flip_authonUserLoginForm(&$template)
         $local_path = $_GET['returnto'];
     }
     $return = strtr($return, array('$1'=>$local_path)); 
-    header('Location: https://profiles.burningflipside.com/login.php?return='.$return);
+    header('Location: '.getenv('PROFILES_URL').'/login.php?return='.$return);
 }
 
 function flip_createUserForm(&$template)
 {
-    header('Location: https://profiles.burningflipside.com/register.php');
+    header('Location: '.getenv('PROFILES_URL').'/register.php');
 }
 
 function flip_authonUserLogoutComplete(&$user, &$inject_html, $old_name)
 {
-    header('Location: https://profiles.burningflipside.com/logout.php');
+    header('Location: '.getenv('PROFILES_URL').'/logout.php');
 }
 
 $wgExtensionCredits['validextensionclass'][] = array(
@@ -97,7 +97,7 @@ $wgExtensionCredits['validextensionclass'][] = array(
     'name' => 'Flipside Authentication',
     'author' => 'Patrick "Problem" Boyd', 
     'url' => 'n/a', 
-    'description' => 'This extension allows authentication and single sign-on with profiles.burningflipside.com',
+    'description' => 'This extension allows authentication and single sign-on with '.getenv('PROFILES_URL').'',
     'version'  => 0.1,
     'license-name' => "",   // Short name of the license, links LICENSE or COPYING file if existing - string, added in 1.23.0
 );
