@@ -65,6 +65,16 @@ function flip_authonUserLoadFromSession($user, &$result)
     return true;
 }
 
+function get_base_uri()
+{
+    $ret = getenv('PROFILES_URL');
+    if($ret === false)
+    {
+         return 'https://profiles.burningflipside.com';
+    }
+    return $ret;
+}
+
 function flip_authonUserLoginForm(&$template)
 {
     global $wgArticlePath;
@@ -79,17 +89,17 @@ function flip_authonUserLoginForm(&$template)
         $local_path = $_GET['returnto'];
     }
     $return = strtr($return, array('$1'=>$local_path)); 
-    header('Location: '.getenv('PROFILES_URL').'/login.php?return='.$return);
+    header('Location: '.get_base_uri().'/login.php?return='.$return);
 }
 
 function flip_createUserForm(&$template)
 {
-    header('Location: '.getenv('PROFILES_URL').'/register.php');
+    header('Location: '.get_base_uri().'/register.php');
 }
 
 function flip_authonUserLogoutComplete(&$user, &$inject_html, $old_name)
 {
-    header('Location: '.getenv('PROFILES_URL').'/logout.php');
+    header('Location: '.get_base_uri().'/logout.php');
 }
 
 $wgExtensionCredits['validextensionclass'][] = array(
@@ -97,8 +107,8 @@ $wgExtensionCredits['validextensionclass'][] = array(
     'name' => 'Flipside Authentication',
     'author' => 'Patrick "Problem" Boyd', 
     'url' => 'n/a', 
-    'description' => 'This extension allows authentication and single sign-on with '.getenv('PROFILES_URL').'',
-    'version'  => 0.1,
+    'description' => 'This extension allows authentication and single sign-on with the burningflipside system',
+    'version'  => 0.2,
     'license-name' => "",   // Short name of the license, links LICENSE or COPYING file if existing - string, added in 1.23.0
 );
 
